@@ -68,7 +68,7 @@ const playerInfo = reactive({
 		position: '北'
 	}
 })
-const positionInfo = ref(['player1','player2', 'player3', 'player4'])
+const positionInfo = ref(['player1', 'player2', 'player3', 'player4'])
 
 const scoreInfo = ref({
 	base: 50,
@@ -84,9 +84,9 @@ const dragStart = (playerKey) => {
 const drop = (targetPlayerKey) => {
 	if (draggedPlayerKey !== targetPlayerKey) {
 		const temp = []
-		for(let i =0; i < 4; i++) {
-			let positionIndex = Number(draggedPlayerKey) + i >= 4 ? Number(draggedPlayerKey) + i -4 : Number(draggedPlayerKey) + i
-			let tempIndex = Number(targetPlayerKey) + i >= 4 ? Number(targetPlayerKey) + i - 4: Number(targetPlayerKey) + i
+		for (let i = 0; i < 4; i++) {
+			let positionIndex = Number(draggedPlayerKey) + i >= 4 ? Number(draggedPlayerKey) + i - 4 : Number(draggedPlayerKey) + i
+			let tempIndex = Number(targetPlayerKey) + i >= 4 ? Number(targetPlayerKey) + i - 4 : Number(targetPlayerKey) + i
 			temp[tempIndex] = positionInfo.value[positionIndex]
 		}
 		positionInfo.value = temp
@@ -99,6 +99,7 @@ const handleConfirm = () => {
 	for (let index in playerInfo) {
 		if (!playerInfo[index].name) return ElMessageBox.alert('請輸入四位玩家姓名!')
 	}
+	if (!isNaN(scoreInfo.base) || !isNaN(scoreInfo.tai)) return ElMessageBox.alert('底或台不能為空!')
 	startGame.value = true
 	dialogVisible.value = false
 }
