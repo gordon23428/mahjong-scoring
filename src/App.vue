@@ -1,21 +1,10 @@
-<script setup>
-import { ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
-</script>
-
 <template>
-	<el-button plain @click="dialogVisible = true"> 開始 </el-button>
-	<el-dialog v-model="dialogVisible" title="Tips" width="500" :before-close="handleClose">
-		<span>This is a message</span>
-		<template #footer>
-			<div class="dialog-footer">
-				<el-button @click="dialogVisible = false">Cancel</el-button>
-				<el-button type="primary" @click="dialogVisible = false"> Confirm </el-button>
-			</div>
-		</template>
-	</el-dialog>
+	<router-view></router-view>
 </template>
 
-<style scoped>
+<script setup>
 
+</script>
+
+<style scoped>
 </style>
