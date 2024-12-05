@@ -1,39 +1,29 @@
 <template>
 	<div class="w-100vw h-100vh flex flex-col">
 		<el-button plain @click="dialogVisible = true"> 開始 </el-button>
-		<el-dialog v-model="dialogVisible" title="Tips" width="500">
-			<p class="mb-5 text-19px">輸入四位參賽者姓名</p>
-			<el-input class="my-3" v-model="playerInfo.player1.name" style="width: 240px" placeholder="Please input" />
-			<el-input class="my-3" v-model="playerInfo.player2.name" style="width: 240px" placeholder="Please input" />
-			<el-input class="my-3" v-model="playerInfo.player3.name" style="width: 240px" placeholder="Please input" />
-			<el-input class="my-3" v-model="playerInfo.player4.name" style="width: 240px" placeholder="Please input" />
-			<div>
-				<span>底:</span>
-				<el-input class="my-3" v-model="scoreInfo.base" style="width: 50px" placeholder="Please input" />
-				<span>台:</span>
-				<el-input class="my-3" v-model="scoreInfo.tai" style="width: 50px" placeholder="Please input" />
-			</div>
-			<template #footer>
-				<div class="dialog-footer">
-					<el-button @click="dialogVisible = false">Cancel</el-button>
-					<el-button type="primary" @click="handleConfirm"> Confirm </el-button>
-				</div>
-			</template>
-		</el-dialog>
+		<Prepare :dialogVisible="dialogVisible" @setPlayer="setPlayer"/>
 
 		<div class="flex-center flex-1">
 			<div class="h-30vh aspect-square border-2 border-solid border-sky-500 relative">
-				<div class="absolute -top-10 left-50% -translate-x-50%" draggable="true" @dragstart="dragStart('0')" @dragover.prevent @drop="drop('0')">
-					{{ playerInfo[positionInfo[0]].name }}
+				<div class="absolute -top-15 left-50% -translate-x-50%" draggable="true" @dragstart="dragStart('0')" @dragover.prevent @drop="drop('0')">
+					<span>({{ playerInfo[positionInfo[0]].position }})</span>
+					<span>{{ playerInfo[positionInfo[0]].name }}</span>
+					<p>分數: {{ playerInfo[positionInfo[0]].score }}</p>
 				</div>
 				<div class="absolute top-50% left-0 -translate-y-50% -translate-x-120%" draggable="true" @dragstart="dragStart('1')" @dragover.prevent @drop="drop('1')">
-					{{ playerInfo[positionInfo[1]].name }}
+					<span>({{ playerInfo[positionInfo[1]].position }})</span>
+					<span>{{ playerInfo[positionInfo[1]].name }}</span>
+					<p>分數: {{ playerInfo[positionInfo[1]].score }}</p>
 				</div>
-				<div class="absolute -bottom-10 left-50% -translate-x-50%" draggable="true" @dragstart="dragStart('2')" @dragover.prevent @drop="drop('2')">
-					{{ playerInfo[positionInfo[2]].name }}
+				<div class="absolute -bottom-15 left-50% -translate-x-50%" draggable="true" @dragstart="dragStart('2')" @dragover.prevent @drop="drop('2')">
+					<span>({{ playerInfo[positionInfo[2]].position }})</span>
+					<span>{{ playerInfo[positionInfo[2]].name }}</span>
+					<p>分數: {{ playerInfo[positionInfo[2]].score }}</p>
 				</div>
 				<div class="absolute top-50% right-0 -translate-y-50% translate-x-120%" draggable="true" @dragstart="dragStart('3')" @dragover.prevent @drop="drop('3')">
-					{{ playerInfo[positionInfo[3]].name }}
+					<span>({{ playerInfo[positionInfo[3]].position }})</span>
+					<span>{{ playerInfo[positionInfo[3]].name }}</span>
+					<p>分數: {{ playerInfo[positionInfo[3]].score }}</p>
 				</div>
 			</div>
 		</div>
@@ -44,6 +34,7 @@
 import { ref, reactive, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { cloneDeep } from 'lodash-es'
+import Prepare from '@/components/Prepare.vue'
 
 const dialogVisible = ref(false)
 const playerInfo = reactive({
@@ -68,6 +59,7 @@ const playerInfo = reactive({
 		position: '北'
 	}
 })
+//控制排序
 const positionInfo = ref(['player1', 'player2', 'player3', 'player4'])
 
 const scoreInfo = ref({
@@ -84,6 +76,7 @@ const dragStart = (playerKey) => {
 const drop = (targetPlayerKey) => {
 	if (draggedPlayerKey !== targetPlayerKey) {
 		const temp = []
+		//排序新的順序
 		for (let i = 0; i < 4; i++) {
 			let positionIndex = Number(draggedPlayerKey) + i >= 4 ? Number(draggedPlayerKey) + i - 4 : Number(draggedPlayerKey) + i
 			let tempIndex = Number(targetPlayerKey) + i >= 4 ? Number(targetPlayerKey) + i - 4 : Number(targetPlayerKey) + i
@@ -95,14 +88,10 @@ const drop = (targetPlayerKey) => {
 	draggedPlayerKey = null
 }
 
-const handleConfirm = () => {
-	for (let index in playerInfo) {
-		if (!playerInfo[index].name) return ElMessageBox.alert('請輸入四位玩家姓名!')
-	}
-	if (!isNaN(scoreInfo.base) || !isNaN(scoreInfo.tai)) return ElMessageBox.alert('底或台不能為空!')
-	startGame.value = true
-	dialogVisible.value = false
+const setPlayer = () => {
+
 }
+
 </script>
 
 <style lang="scss" scoped>
