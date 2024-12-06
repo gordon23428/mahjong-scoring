@@ -6,7 +6,7 @@
 			</span>
 		</div>
 		<div class="">
-			<draggable :list="nameList" group="list" item-key="name" class="flex justify-around">
+			<draggable v-model="nameList" group="list" item-key="name" class="flex justify-around">
 				<template #item="{ element }">
 					<div class="cursor-grab">{{ element.name }}</div>
 				</template>
@@ -60,6 +60,8 @@ const handleConfirm = () => {
 		playerInfo.push(temp)
 	}
 	infoStore.updatePlayers(playerInfo)
+	emit('update:innerDialogVisible', false)
+	emit('closeDialog')
 }
 </script>
 

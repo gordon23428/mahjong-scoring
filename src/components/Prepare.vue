@@ -45,7 +45,7 @@
 				<el-button type="primary" @click="handleConfirm"> Confirm </el-button>
 			</div>
 		</template>
-		<Prepare2 v-model:innerDialogVisible="innerDialogVisible" :nameList="inputInfo" />
+		<Prepare2 v-model:innerDialogVisible="innerDialogVisible" :nameList="inputInfo" @closeDialog="closeDialog" />
 	</el-dialog>
 </template>
 
@@ -62,6 +62,7 @@ const props = defineProps({
 });
 const infoStore = useInfoStore()
 const innerDialogVisible = ref(false)
+const emit = defineEmits(['update:dialogVisible'])
 
 const inputInfo = ref([
 	{ name: 'player1' }, { name: 'player2' }, { name: 'player3' }, { name: 'player4' }
@@ -79,6 +80,9 @@ const handleConfirm = () => {
 	if (!isNaN(scoreInfo.base) || !isNaN(scoreInfo.tai)) return ElMessageBox.alert('底或台不能為空!')
 	infoStore.updateScore(scoreInfo.value)
 	innerDialogVisible.value = true
+}
+const closeDialog = () => {
+	emit('update:dialogVisible', false)
 }
 
 </script>

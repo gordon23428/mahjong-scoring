@@ -1,7 +1,7 @@
 <template>
 	<div class="w-100vw h-100vh flex flex-col">
 		<el-button plain @click="dialogVisible = true"> 開始 </el-button>
-		<Prepare :dialogVisible="dialogVisible" @setPlayer="setPlayer" />
+		<Prepare v-model:dialogVisible="dialogVisible" @setPlayer="setPlayer" />
 
 		<div class="flex-center flex-1">
 			<div class="w-40vw aspect-square border-2 border-solid border-sky-500 relative">
@@ -59,6 +59,7 @@ import { ref, reactive, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { cloneDeep } from 'lodash-es'
 import Prepare from '@/components/Prepare.vue'
+import { useInfoStore } from '@/store/info.js'
 
 const dialogVisible = ref(false)
 const playerInfo = reactive({
