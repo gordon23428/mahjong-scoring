@@ -1,5 +1,5 @@
 !<template>
-	<el-dialog v-model="props.dialogVisible" title="輸入名稱" width="500">
+	<el-dialog v-model="dialogVisible" title="輸入名稱" width="500">
 		<p class="mb-5 text-19px">輸入四位參賽者姓名</p>
 		<el-input
 			class="my-3"
@@ -41,7 +41,7 @@
 		</div>
 		<template #footer>
 			<div class="dialog-footer">
-				<el-button @click="dialogVisible = false">Cancel</el-button>
+				<el-button @click="closeDialog">Cancel</el-button>
 				<el-button type="primary" @click="handleConfirm"> Confirm </el-button>
 			</div>
 		</template>
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue"
+import { reactive, ref, watch } from "vue"
 import Prepare2 from "@/components/Prepare2.vue";
 import { useInfoStore } from '@/store/info.js'
 
@@ -61,8 +61,13 @@ const props = defineProps({
 	}
 });
 const infoStore = useInfoStore()
+const dialogVisible = ref(false)//props不能直接綁定v-model，要複製一份到local
 const innerDialogVisible = ref(false)
 const emit = defineEmits(['update:dialogVisible'])
+
+watch(() => props.dialogVisible, (val) => {
+	dialogVisible.value = val
+})
 
 const inputInfo = ref([
 	{ name: 'player1' }, { name: 'player2' }, { name: 'player3' }, { name: 'player4' }

@@ -1,5 +1,5 @@
 !<template>
-	<el-dialog v-model="props.innerDialogVisible" title="決定方位" width="400">
+	<el-dialog v-model="innerDialogVisible" title="決定方位" width="400">
 		<div class="flex justify-around mb-2">
 			<span v-for="item in position" :key="item">
 				{{ item }}
@@ -40,7 +40,9 @@ const props = defineProps({
 const infoStore = useInfoStore()
 const nameList = ref(null)
 const position = ref(['東', '南', '西', '北'])
+const innerDialogVisible = ref(false) //props不能直接綁定v-model，要複製一份到local
 watch(() => props.innerDialogVisible, (val) => {
+	innerDialogVisible.value = val
 	if (val) nameList.value = cloneDeep(props.nameList)
 })
 
