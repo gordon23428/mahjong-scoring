@@ -3,10 +3,10 @@ import { ref, reactive } from 'vue'
 
 export const useInfoStore = defineStore('info', () => {
 	const players = reactive([])
-	const score = ref({})
+	const options = ref({})
 
-	const updateScore = (newScore) => {
-		score.value = { ...score.value, ...newScore }
+	const updateOptions = (newOptions) => {
+		options.value = { ...options.value, ...newOptions }
 	}
 	const updatePlayers = (newPlayers) => {
 		players.length = 0
@@ -14,5 +14,5 @@ export const useInfoStore = defineStore('info', () => {
 
 	}
 
-	return { players, score, updateScore, updatePlayers }
+	return { players, options, updateOptions, updatePlayers }
 })

@@ -1,17 +1,20 @@
-!<template>
-	<el-dialog v-model="innerDialogVisible" title="決定方位" width="400">
+<template>
+	<el-dialog v-model="innerDialogVisible" title="決定方位" width="400" @close="handleClose">
 		<div class="flex justify-around mb-2">
 			<span v-for="item in position" :key="item">
 				{{ item }}
 			</span>
 		</div>
-		<div class="">
-			<draggable v-model="nameList" group="list" item-key="name" class="flex justify-around">
-				<template #item="{ element }">
-					<div class="cursor-grab">{{ element.name }}</div>
-				</template>
-			</draggable>
-		</div>
+		<draggable v-model="nameList" group="list" item-key="name" class="flex justify-around">
+			<template #item="{ element }">
+				<div class="cursor-grab">{{ element.name }}</div>
+			</template>
+		</draggable>
+		<h3 class="mt-4 text-3">圈數:</h3>
+		<el-radio-group v-model="gameType">
+			<el-radio value="1" size="large">東南西北</el-radio>
+			<el-radio value="2" size="large">中發白</el-radio>
+		</el-radio-group>
 		<template #footer>
 			<div class="dialog-footer">
 				<el-button @click="handleClose">Cancel</el-button>
@@ -41,6 +44,7 @@ const infoStore = useInfoStore()
 const nameList = ref(null)
 const position = ref(['東', '南', '西', '北'])
 const innerDialogVisible = ref(false) //props不能直接綁定v-model，要複製一份到local
+const gameType = ref("1")
 watch(() => props.innerDialogVisible, (val) => {
 	innerDialogVisible.value = val
 	if (val) nameList.value = cloneDeep(props.nameList)
@@ -62,6 +66,7 @@ const handleConfirm = () => {
 		playerInfo.push(temp)
 	}
 	infoStore.updatePlayers(playerInfo)
+	infoStore.updateOptions({ gameType: gameType.value })
 	emit('update:innerDialogVisible', false)
 	emit('closeDialog')
 }

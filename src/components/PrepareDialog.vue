@@ -1,5 +1,5 @@
-!<template>
-	<el-dialog v-model="dialogVisible" title="輸入名稱" width="500">
+<template>
+	<el-dialog v-model="dialogVisible" title="輸入名稱" width="500" @close="closeDialog">
 		<p class="mb-5 text-19px">輸入四位參賽者姓名</p>
 		<el-input
 			class="my-3"
@@ -45,13 +45,13 @@
 				<el-button type="primary" @click="handleConfirm"> Confirm </el-button>
 			</div>
 		</template>
-		<Prepare2 v-model:innerDialogVisible="innerDialogVisible" :nameList="inputInfo" @closeDialog="closeDialog" />
+		<PrepareDialog2 v-model:innerDialogVisible="innerDialogVisible" :nameList="inputInfo" @closeDialog="closeDialog" />
 	</el-dialog>
 </template>
 
 <script setup>
 import { reactive, ref, watch } from "vue"
-import Prepare2 from "@/components/Prepare2.vue";
+import PrepareDialog2 from "@/components/PrepareDialog2.vue";
 import { useInfoStore } from '@/store/info.js'
 
 const props = defineProps({
@@ -83,7 +83,7 @@ const handleConfirm = () => {
 		if (!name) return ElMessageBox.alert('請輸入四位玩家姓名!')
 	}
 	if (!isNaN(scoreInfo.base) || !isNaN(scoreInfo.tai)) return ElMessageBox.alert('底或台不能為空!')
-	infoStore.updateScore(scoreInfo.value)
+	infoStore.updateOptions(scoreInfo.value)
 	innerDialogVisible.value = true
 }
 const closeDialog = () => {
