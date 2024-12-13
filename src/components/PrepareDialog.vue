@@ -35,9 +35,9 @@
 		/>
 		<div>
 			<span>底:</span>
-			<el-input class="my-3" v-model="scoreInfo.base" style="width: 50px" />
+			<el-input class="my-3" v-model="scoreInfo.baseScore" style="width: 50px" />
 			<span>台:</span>
-			<el-input class="my-3" v-model="scoreInfo.tai" style="width: 50px" />
+			<el-input class="my-3" v-model="scoreInfo.taiScore" style="width: 50px" />
 		</div>
 		<template #footer>
 			<div class="dialog-footer">
@@ -74,15 +74,15 @@ const inputInfo = ref([
 ])
 
 const scoreInfo = ref({
-	base: 50,
-	tai: 20
+	baseScore: 50,
+	taiScore: 20
 })
 
 const handleConfirm = () => {
 	for (let name of inputInfo.value) {
 		if (!name) return ElMessageBox.alert('請輸入四位玩家姓名!')
 	}
-	if (!isNaN(scoreInfo.base) || !isNaN(scoreInfo.tai)) return ElMessageBox.alert('底或台不能為空!')
+	if (!isNaN(scoreInfo.baseScore) || !isNaN(scoreInfo.taiScore)) return ElMessageBox.alert('底或台不能為空!')
 	infoStore.updateOptions(scoreInfo.value)
 	innerDialogVisible.value = true
 }

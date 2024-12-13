@@ -1,11 +1,115 @@
 <template>
-	<el-button>自摸</el-button>
-	<el-button>胡</el-button>
+	<el-dialog v-model="dialogVisible" :title="`${props.selectPlayer}選擇行為`" width="500" @close="handleClose">
+		<div class="mb-2">
+			<el-button :class="{ act: type === 'zihmo' }" @click="type = 'zihmo'">自摸</el-button>
+			<el-button :class="{ act: type === 'hu' }" @click="type = 'hu'">胡</el-button>
+		</div>
+		<!-- 放槍玩家 -->
+		<el-select
+			class="mb-2"
+			v-if="type === 'hu'"
+			v-model="losePlayer"
+			placeholder="放槍"
+			size="large"
+			style="width: 6rem"
+		>
+			<el-option v-for="item in otherPlayer" :key="item.name" :label="item.name" :value="item.name" />
+		</el-select>
+		<!-- 台數 -->
+		<el-select v-if="type" class="block" v-model="tai" placeholder="台數" size="large" style="width: 6rem">
+			<el-option v-for="num in taiList" :key="num" :label="num" :value="num" />
+		</el-select>
+
+		<template #footer>
+			<div class="text-center">
+				<el-button type="primary" @click="handleConfirm"> Confirm </el-button>
+			</div>
+		</template>
+	</el-dialog>
 </template>
 
 <script setup>
+import { ref, watch, computed } from 'vue'
+import { find } from 'lodash-es'
+import { useInfoStore } from '@/store/info.js'
+import { storeToRefs } from 'pinia'
+
+const props = defineProps({
+	dialogVisible: {
+		default: false,
+		type: Boolean
+	},
+	selectPlayer: {
+		default: '',
+		type: String
+	}
+});
+
+const infoStore = useInfoStore()
+const { players, options } = storeToRefs(infoStore)
+const dialogVisible = ref(false)//props不能直接綁定v-model，要複製一份到local
+const type = ref('')//自摸 or 胡
+const losePlayer = ref('')//放槍玩家
+const tai = ref('')
+const taiList = ref(Array.from({ length: 50 }, (_, i) => i + 1))
+
+const otherPlayer = computed(() =>
+	players.value.filter((player) => player.name !== props.selectPlayer))
+
+watch(() => props.dialogVisible, (val) => {
+	dialogVisible.value = val
+})
+
+const emit = defineEmits(['update:dialogVisible'])
+
+function handleClose() {
+	emit('update:dialogVisible', false)
+}
+
+function handleConfirm() {
+	const base = options.value.baseScore + options.value.taiScore * tai.value //基本輸贏分數
+	if (type.value === 'zihmo') {
+		let winScore = 0 //自摸贏得分數
+		players.value = players.value.map((player) => {
+			if (player.name !== props.selectPlayer) {
+				const score = player.banker ? base + options.value.taiScore * calcBankerLoseTai(player) : base
+				player.score -= score
+				winScore += score
+			}
+			return player
+		})
+		find(players.value, { name: props.selectPlayer }).score += winScore
+	} else {
+		players.value = players.value.map((player) => {
+			if (player.name === props.selectPlayer) {
+				player.score += base
+			} else if (player.name === losePlayer.value) {
+				player.score -= base
+			}
+			return player
+		})
+	}
+	init()
+	handleClose()
+}
+
+//計算莊家額外輸掉台數
+function calcBankerLoseTai(player) {
+	if (!player.winningSteak) return 1
+	else return player.winningSteak * 2
+}
+
+function init() {
+	losePlayer.value = ''
+	tai.value = ''
+}
 
 </script>
 
 <style lang="scss" scoped>
+.act {
+	color: #409eff;
+	border-color: rgb(197.7, 225.9, 255);
+	background-color: rgb(235.9, 245.3, 255);
+}
 </style>

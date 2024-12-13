@@ -5,24 +5,23 @@
 
 		<div class="flex-center flex-1">
 			<div class="w-40% aspect-square border-2 border-solid border-sky-500 relative">
-				<draggable v-model="players" item-key="name">
-					<template #item="{ element }">
-						<div class="cursor-grab player" @click="selectBehavior(element.name)">
-							<span>{{ element.name }}</span>
-							<span>({{ element.position }})</span>
-							<div>{{ element.score }}</div>
-						</div>
-					</template>
-				</draggable>
+				<div
+					v-for="player in players"
+					:key="player.name"
+					class="cursor-grab player"
+					@click="selectBehavior(player.name)"
+				>
+					<span>{{ player.name }}</span>
+					<span>({{ player.position }})</span>
+					<div>{{ player.score }}</div>
+				</div>
 			</div>
 		</div>
-
-		<!-- <el-dialog v-model="behaviorDialogShow" title="選擇行為" width="800"> </el-dialog> -->
+		<BehaviorDialog v-model:dialogVisible="behaviorDialogShow" :selectPlayer="selectPlayer" />
 	</div>
 </template>
 
 <script setup>
-import draggable from 'vuedraggable'
 import { ref, reactive, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { cloneDeep } from 'lodash-es'
@@ -32,21 +31,21 @@ import { useInfoStore } from '@/store/info.js'
 import { storeToRefs } from 'pinia'
 
 const infoStore = useInfoStore()
-const { players, score } = storeToRefs(infoStore)
+const { players } = storeToRefs(infoStore)
 const dialogVisible = ref(false)
 const behaviorDialogShow = ref(false)
-const key = ref(Math.random(100) * 100)
+const selectPlayer = ref('')
 
 const gameType = 0 //東南西北: 1 ,中發白: 2
 
 function selectBehavior(name) {
 	behaviorDialogShow.value = true
+	selectPlayer.value = name
 
 }
 
 function start() {
 	dialogVisible.value = true
-	++key.value
 }
 
 </script>

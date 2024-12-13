@@ -60,9 +60,11 @@ const handleConfirm = () => {
 	const playerInfo = []
 	for (let index in nameList.value) {
 		const temp = {}
-		temp.name = nameList.value[index].name
-		temp.position = position.value[index]
-		temp.score = 0
+		temp.name = nameList.value[index].name //名稱
+		temp.position = position.value[index]//方位
+		temp.score = 0 //分數
+		temp.banker = position.value[index] === '東' ? true : false //莊家
+		temp.winningSteak = 0 //連莊
 		playerInfo.push(temp)
 	}
 	infoStore.updatePlayers(playerInfo)
