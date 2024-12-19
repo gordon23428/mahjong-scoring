@@ -68,26 +68,56 @@ function handleClose() {
 
 function handleConfirm() {
 	const base = options.value.baseScore + options.value.taiScore * tai.value //基本輸贏分數
+	let bankerIndex = null //記錄莊家index
+	//自摸
 	if (type.value === 'zihmo') {
 		let winScore = 0 //自摸贏得分數
-		players.value = players.value.map((player) => {
-			if (player.name !== props.selectPlayer) {
+		players.value = players.value.map((player, index) => {
+			const isWinner = player.name === props.selectPlayer
+			const isBanker = player.banker
+			if (!isWinner) {
 				const score = player.banker ? base + options.value.taiScore * calcBankerLoseTai(player) : base
 				player.score -= score
 				winScore += score
 			}
-			return player
-		})
-		find(players.value, { name: props.selectPlayer }).score += winScore
-	} else {
-		players.value = players.value.map((player) => {
-			if (player.name === props.selectPlayer) {
-				player.score += base
-			} else if (player.name === losePlayer.value) {
-				player.score -= base
+			if (isBanker) {
+				//如果是莊家獲勝要判斷連莊
+				if (isWinner) {
+					player.winningSteak++
+				} else { //換莊
+					bankerIndex = index
+					player.banker = false
+				}
 			}
 			return player
 		})
+		find(players.value, { name: props.selectPlayer }).score += winScore
+	} else { //胡牌
+		players.value = players.value.map((player, index) => {
+			const isWinner = player.name === props.selectPlayer
+			const isLoser = player.name === losePlayer.value
+			const isBanker = player.banker
+			if (isWinner) {
+				player.score += base
+				//如果是莊家獲勝要判斷連莊
+				if (isBanker) {
+					player.winningSteak++
+				}
+			} else if (isLoser) {
+				player.score -= base
+			}
+			//換莊
+			if (isBanker && !isWinner) {
+				bankerIndex = index
+				player.banker = false
+			}
+			return player
+		})
+	}
+	//換莊(bankerIndex == null 代表連莊)
+	const nextBankerIndex = bankerIndex !== null ? (bankerIndex + 1 > 3 ? 0 : bankerIndex + 1) : null
+	if (nextBankerIndex) {
+		players.value[nextBankerIndex].banker = true
 	}
 	init()
 	handleClose()
