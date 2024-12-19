@@ -1,0 +1,1 @@
+export const ROUND_NAME = ['東', '南', '西', '北']

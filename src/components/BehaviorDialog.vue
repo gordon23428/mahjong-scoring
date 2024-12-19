@@ -116,7 +116,8 @@ function handleConfirm() {
 	}
 	//換莊(bankerIndex == null 代表連莊)
 	const nextBankerIndex = bankerIndex !== null ? (bankerIndex + 1 > 3 ? 0 : bankerIndex + 1) : null
-	if (nextBankerIndex) {
+	if (nextBankerIndex !== null) {
+		infoStore.updateRoundTracker()
 		players.value[nextBankerIndex].banker = true
 	}
 	init()

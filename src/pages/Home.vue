@@ -1,5 +1,5 @@
 <template>
-	<div class="h-100vh flex flex-col">
+	<div class="h-100vh flex flex-col relative">
 		<el-button plain @click="start"> 開始 </el-button>
 		<PrepareDialog v-model:dialogVisible="dialogVisible" />
 
@@ -18,6 +18,7 @@
 			</div>
 		</div>
 		<BehaviorDialog v-model:dialogVisible="behaviorDialogShow" :selectPlayer="selectPlayer" />
+		<Info />
 	</div>
 </template>
 
@@ -27,6 +28,7 @@ import { ElMessageBox } from 'element-plus'
 import { cloneDeep } from 'lodash-es'
 import PrepareDialog from '@/components/PrepareDialog.vue'
 import BehaviorDialog from '@/components/BehaviorDialog.vue'
+import Info from '@/components/Info.vue'
 import { useInfoStore } from '@/store/info.js'
 import { storeToRefs } from 'pinia'
 

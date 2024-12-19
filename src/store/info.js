@@ -4,6 +4,7 @@ import { ref, reactive } from 'vue'
 export const useInfoStore = defineStore('info', () => {
 	const players = reactive([])
 	const options = ref({})
+	const roundTracker = ref('0') //圈數進度(四進位)
 
 	const updateOptions = (newOptions) => {
 		options.value = { ...options.value, ...newOptions }
@@ -11,8 +12,12 @@ export const useInfoStore = defineStore('info', () => {
 	const updatePlayers = (newPlayers) => {
 		players.length = 0
 		players.push(...newPlayers)
-
+	}
+	const updateRoundTracker = () => {
+		let decimalValue = parseInt(roundTracker.value, 4); // 將四進位轉換為十進位
+		decimalValue++
+		roundTracker.value = decimalValue.toString(4);
 	}
 
-	return { players, options, updateOptions, updatePlayers }
+	return { players, options, roundTracker, updateOptions, updatePlayers, updateRoundTracker }
 })
