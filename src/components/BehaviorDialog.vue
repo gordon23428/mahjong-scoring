@@ -118,8 +118,8 @@ function handleConfirm() {
 			return player
 		})
 	}
-	//換莊(bankerIndex == null 代表連莊)
-	const nextBankerIndex = bankerIndex !== null ? (bankerIndex + 1 > 3 ? 0 : bankerIndex + 1) : null
+	//換莊(nextBankerIndex == null 代表連莊)
+	const nextBankerIndex = processNextBankerIndex(bankerIndex)
 	if (nextBankerIndex !== null) {
 		infoStore.updateRoundTracker()
 		players.value[nextBankerIndex].banker = true
@@ -132,6 +132,11 @@ function handleConfirm() {
 function calcBankerLoseTai(player) {
 	if (!player.winningSteak) return 1
 	else return player.winningSteak * 2
+}
+
+function processNextBankerIndex(index) {
+	if (index === null) return null
+	return index + 1 > 3 ? 0 : index
 }
 
 function init() {
