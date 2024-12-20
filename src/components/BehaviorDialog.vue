@@ -33,6 +33,7 @@ import { ref, watch, computed } from 'vue'
 import { find } from 'lodash-es'
 import { useInfoStore } from '@/store/info.js'
 import { storeToRefs } from 'pinia'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
 	dialogVisible: {
@@ -67,6 +68,9 @@ function handleClose() {
 }
 
 function handleConfirm() {
+	const errMsg = validate()
+	if (errMsg) return ElMessage.error(errMsg)
+
 	const base = options.value.baseScore + options.value.taiScore * tai.value //基本輸贏分數
 	let bankerIndex = null //記錄莊家index
 	//自摸
@@ -133,6 +137,16 @@ function calcBankerLoseTai(player) {
 function init() {
 	losePlayer.value = ''
 	tai.value = ''
+	type.value = ''
+}
+
+function validate() {
+	if (!tai.value) {
+		return '請選擇台數!'
+	}
+	if (type.value === 'hu' && !losePlayer.value) {
+		return '請選擇放槍玩家!'
+	}
 }
 
 </script>

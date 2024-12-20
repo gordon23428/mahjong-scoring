@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="dialogVisible" title="輸入名稱" width="500" @close="closeDialog">
+	<el-dialog v-model="dialogVisible" title="輸入名稱" width="500" @close="closeDialog" :close-on-click-modal="false">
 		<p class="mb-5 text-19px">輸入四位參賽者姓名</p>
 		<el-input
 			class="my-3"
@@ -35,9 +35,9 @@
 		/>
 		<div>
 			<span>底:</span>
-			<el-input class="my-3" v-model="scoreInfo.baseScore" style="width: 50px" />
+			<el-input class="my-3" v-model.number="scoreInfo.baseScore" type="number" clearable style="width: 100px" />
 			<span>台:</span>
-			<el-input class="my-3" v-model="scoreInfo.taiScore" style="width: 50px" />
+			<el-input class="my-3" v-model.number="scoreInfo.taiScore" type="number" clearable style="width: 100px" />
 		</div>
 		<template #footer>
 			<div class="dialog-footer">
@@ -53,6 +53,7 @@
 import { reactive, ref, watch } from "vue"
 import PrepareDialog2 from "@/components/PrepareDialog2.vue";
 import { useInfoStore } from '@/store/info.js'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
 	dialogVisible: {
@@ -79,10 +80,14 @@ const scoreInfo = ref({
 })
 
 const handleConfirm = () => {
-	for (let name of inputInfo.value) {
-		if (!name) return ElMessageBox.alert('請輸入四位玩家姓名!')
+	for (let item of inputInfo.value) {
+		if (!item.name) {
+			return ElMessage.error('請輸入四位玩家姓名!')
+		}
 	}
-	if (!isNaN(scoreInfo.baseScore) || !isNaN(scoreInfo.taiScore)) return ElMessageBox.alert('底或台不能為空!')
+	if (!isNaN(scoreInfo.baseScore) || !isNaN(scoreInfo.taiScore)) {
+		return ElMessage.error('底或台不能為空!')
+	}
 	infoStore.updateOptions(scoreInfo.value)
 	innerDialogVisible.value = true
 }

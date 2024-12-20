@@ -19,26 +19,26 @@
 		</div>
 		<BehaviorDialog v-model:dialogVisible="behaviorDialogShow" :selectPlayer="selectPlayer" />
 		<Info />
+		<ResultDialog v-model:dialogVisible="resultDialogShow" @restart="handleRestart" />
 	</div>
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { ElMessageBox } from 'element-plus'
+import { ref, reactive, computed, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import PrepareDialog from '@/components/PrepareDialog.vue'
 import BehaviorDialog from '@/components/BehaviorDialog.vue'
+import ResultDialog from '@/components/ResultDialog.vue'
 import Info from '@/components/Info.vue'
 import { useInfoStore } from '@/store/info.js'
 import { storeToRefs } from 'pinia'
 
 const infoStore = useInfoStore()
-const { players } = storeToRefs(infoStore)
+const { players, roundTracker, options } = storeToRefs(infoStore)
 const dialogVisible = ref(false)
 const behaviorDialogShow = ref(false)
+const resultDialogShow = ref(false)
 const selectPlayer = ref('')
-
-const gameType = 0 //東南西北: 1 ,中發白: 2
 
 function selectBehavior(name) {
 	behaviorDialogShow.value = true
@@ -48,6 +48,23 @@ function selectBehavior(name) {
 
 function start() {
 	dialogVisible.value = true
+}
+
+watch(roundTracker, (val) => {
+	//代表已經結束
+	if (options.value.gameType === "1") {
+		if (val === '40') {
+			resultDialogShow.value = true
+		}
+	} else if (options.value.gameType === "2") {
+		if (val === '30') {
+			resultDialogShow.value = true
+		}
+	}
+})
+
+function handleRestart() {
+	start()
 }
 
 </script>

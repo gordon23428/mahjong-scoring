@@ -14,7 +14,7 @@ export const useInfoStore = defineStore('info', () => {
 		players.push(...newPlayers)
 	}
 	const updateRoundTracker = () => {
-		let decimalValue = parseInt(roundTracker.value, 4); // 將四進位轉換為十進位
+		let decimalValue = parseInt(roundTracker.value, 4);
 		decimalValue++
 		roundTracker.value = decimalValue.toString(4);
 	}
