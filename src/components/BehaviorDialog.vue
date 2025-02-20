@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="dialogVisible" :title="`${props.selectPlayer}選擇行為`" width="500" @close="handleClose">
+	<el-dialog v-model="dialogVisible" :title="`${props.selectPlayer}選擇行為`" @close="handleClose" class="w-80vw max-w-500px">
 		<div class="mb-2">
 			<el-button :class="{ act: type === 'zihmo' }" @click="type = 'zihmo'">自摸</el-button>
 			<el-button :class="{ act: type === 'hu' }" @click="type = 'hu'">胡</el-button>

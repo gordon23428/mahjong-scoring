@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="dialogVisible" title="輸入名稱" width="500" @close="closeDialog" :close-on-click-modal="false">
+	<el-dialog v-model="dialogVisible" title="輸入名稱" @close="closeDialog" :close-on-click-modal="false" class="w-80vw max-w-500px">
 		<p class="mb-5 text-19px">輸入四位參賽者姓名</p>
 		<el-input
 			class="my-3"

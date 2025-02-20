@@ -2,9 +2,9 @@
 	<el-dialog
 		v-model="innerDialogVisible"
 		title="決定方位"
-		width="400"
 		@close="handleClose"
 		:close-on-click-modal="false"
+		class="w-70vw max-w-400px"
 	>
 		<div class="flex justify-around mb-2">
 			<span v-for="item in position" :key="item">
