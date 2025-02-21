@@ -1,5 +1,5 @@
 <template>
-	<div v-if="options.baseScore && options.taiScore" class="absolute top-8 right-0 p-4">
+	<div v-if="options.baseScore && options.taiScore">
 		<div>
 			<span>底: {{ options.baseScore }} 台: {{ options.taiScore }}</span>
 		</div>
@@ -26,5 +26,4 @@ const round = computed(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

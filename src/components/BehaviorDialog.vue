@@ -1,5 +1,10 @@
 <template>
-	<el-dialog v-model="dialogVisible" :title="`${props.selectPlayer}選擇行為`" @close="handleClose" class="w-80vw max-w-500px">
+	<el-dialog
+		v-model="dialogVisible"
+		:title="`${props.selectPlayer}選擇行為`"
+		@close="handleClose"
+		class="w-80vw max-w-500px"
+	>
 		<div class="mb-2">
 			<el-button :class="{ act: type === 'zihmo' }" @click="type = 'zihmo'">自摸</el-button>
 			<el-button :class="{ act: type === 'hu' }" @click="type = 'hu'">胡</el-button>
@@ -38,28 +43,30 @@ import { ElMessage } from 'element-plus'
 const props = defineProps({
 	dialogVisible: {
 		default: false,
-		type: Boolean
+		type: Boolean,
 	},
 	selectPlayer: {
 		default: '',
-		type: String
-	}
-});
+		type: String,
+	},
+})
 
 const infoStore = useInfoStore()
 const { players, options } = storeToRefs(infoStore)
-const dialogVisible = ref(false)//props不能直接綁定v-model，要複製一份到local
-const type = ref('')//自摸 or 胡
-const losePlayer = ref('')//放槍玩家
+const dialogVisible = ref(false) //props不能直接綁定v-model，要複製一份到local
+const type = ref('') //自摸 or 胡
+const losePlayer = ref('') //放槍玩家
 const tai = ref('')
 const taiList = ref(Array.from({ length: 50 }, (_, i) => i + 1))
 
-const otherPlayer = computed(() =>
-	players.value.filter((player) => player.name !== props.selectPlayer))
+const otherPlayer = computed(() => players.value.filter((player) => player.name !== props.selectPlayer))
 
-watch(() => props.dialogVisible, (val) => {
-	dialogVisible.value = val
-})
+watch(
+	() => props.dialogVisible,
+	(val) => {
+		dialogVisible.value = val
+	},
+)
 
 const emit = defineEmits(['update:dialogVisible'])
 
@@ -88,7 +95,8 @@ function handleConfirm() {
 				//如果是莊家獲勝要判斷連莊
 				if (isWinner) {
 					player.winningSteak++
-				} else { //換莊
+				} else {
+					//換莊
 					bankerIndex = index
 					player.banker = false
 				}
@@ -96,7 +104,8 @@ function handleConfirm() {
 			return player
 		})
 		find(players.value, { name: props.selectPlayer }).score += winScore
-	} else { //胡牌
+	} else {
+		//胡牌
 		players.value = players.value.map((player, index) => {
 			const isWinner = player.name === props.selectPlayer
 			const isLoser = player.name === losePlayer.value
@@ -136,7 +145,7 @@ function calcBankerLoseTai(player) {
 
 function processNextBankerIndex(index) {
 	if (index === null) return null
-	return index + 1 > 3 ? 0 : index
+	return index + 1 > 3 ? 0 : index + 1
 }
 
 function init() {
@@ -153,7 +162,6 @@ function validate() {
 		return '請選擇放槍玩家!'
 	}
 }
-
 </script>
 
 <style lang="scss" scoped>
